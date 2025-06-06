@@ -29,7 +29,7 @@ const formSchema = z.object({
   }),
 });
 
-const Signup = () => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -39,7 +39,6 @@ const Signup = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      
       email: "",
       password: "",
     },
@@ -51,11 +50,9 @@ const Signup = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-md">
-      <h1 className="text-xl font-bold mb-4">Sign Up</h1>
+      <h1 className="text-xl font-bold mb-4 text-center underline">Login</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        
-
           {/* Email */}
           <FormField
             control={form.control}
@@ -119,4 +116,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

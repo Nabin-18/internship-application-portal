@@ -1,7 +1,7 @@
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
-import { Input } from "../input";
-import { Button } from "../button";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,9 +15,11 @@ const Header = () => {
   return (
     <>
       {/* Desktop version */}
-      <div className="hidden lg:flex justify-between items-center p-4 shadow-2xl rounded-2xl bg-white fixed top-0 left-0 right-0 z-50">
+      <div className="hidden lg:flex justify-between items-center p-4 shadow-2xl rounded-2xl bg-white">
         <div>
-          <img src="logo.png" alt="logo" className="h-16 w-16 rounded-full" />
+          <Link to={"/"}>
+            <img src="logo.png" alt="logo" className="h-16 w-16 rounded-full" />
+          </Link>
         </div>
         <div>
           <Input
