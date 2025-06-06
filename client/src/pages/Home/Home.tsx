@@ -1,44 +1,27 @@
-import { useNavigate } from "react-router-dom";
+import Card from "@/components/Card";
+import myData from "@/assets/data";
 
-import type { ReactNode } from "react";
-
-const listItems = [
-  { id: 1, name: "Web Development", path: "/web-development" },
-  { id: 2, name: "Data Science", path: "/data-science" },
-  { id: 3, name: "Machine Learning", path: "/machine-learning" },
-  { id: 4, name: "Mobile Development", path: "/mobile-development" },
-  { id: 5, name: "Game Development", path: "/game-development" },
-];
-
-const Home = ({ children }: { children: ReactNode }) => {
-  const navigate = useNavigate();
-
-  const handleClick = (path: string) => {
-    navigate(path);
-  };
-
+const Home = () => {
   return (
-    <div className="flex w-full h-screen bg-gray-100">
-      <div className="w-[20%] flex shadow-2xl justify-center">
-        <div className="w-full ">
-          <h1 className="font-semibold mt-5 px-3">Choose your field</h1>
-          <div className="flex flex-col gap-5 mt-5 w-full">
-            <ul className="list-disc flex flex-col divide-y w-full  ">
-              {listItems.map((item) => (
-                <li
-                  key={item.id}
-                  onClick={() => handleClick(item.path)}
-                  className="w-full text-gray-600 hover:text-black text-sm transition-all cursor-pointer list-none p-3  hover:bg-gray-200"
-                >
-                  {item.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="flex w-full  bg-gray-100">
+      <div className="w-[100%] flex flex-col justify-center ">
+        <div className=" ">
+          <h1 className="text-center mt-4 font-semibold">All availabe internship applications</h1>
+        </div>
+        <div className="flex flex-wrap  gap-6 justify-around p-4">
+          {myData.map((item) => (
+            <Card
+              key={item.id}
+              name={item.name}
+              image={item.image}
+              company={item.company}
+              location={item.location}
+              timePeriod={item.timePeriod}
+              description={item.description}
+            />
+          ))}
         </div>
       </div>
-
-      <div className="w-[80%] flex justify-center">{children}</div>
     </div>
   );
 };
