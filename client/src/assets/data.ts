@@ -64,7 +64,50 @@ const myData = [
     timePeriod: "2 Months",
     description:
       "Kickstart your career in data with our Data Science Internship. You'll analyze datasets, build predictive models, and visualize insights to support business decisions. This role is perfect for those interested in turning data into actionable knowledge."
-  }
+  },
+   {
+    id: 2,
+    category: "mobiledevelopment",
+    name: "Mobile Development Intern",
+    image: "mobile.jpg",
+    company: "AppVerse Pvt. Ltd.",
+    location: "Hyderabad, India",
+    timePeriod: "2 Months",
+    description:
+      "Join us as a Mobile Development Intern and gain practical experience in building intuitive and high-performance mobile applications. Work with technologies like React Native or Flutter, collaborate with experienced developers, and contribute to projects that reach users on Android and iOS platforms."
+  },
+   {
+    id: 2,
+    category: "mobiledevelopment",
+    name: "Mobile Development Intern",
+    image: "mobile.jpg",
+    company: "AppVerse Pvt. Ltd.",
+    location: "Hyderabad, India",
+    timePeriod: "2 Months",
+    description:
+      "Join us as a Mobile Development Intern and gain practical experience in building intuitive and high-performance mobile applications. Work with technologies like React Native or Flutter, collaborate with experienced developers, and contribute to projects that reach users on Android and iOS platforms."
+  }, {
+    id: 2,
+    category: "mobiledevelopment",
+    name: "Mobile Development Intern",
+    image: "mobile.jpg",
+    company: "AppVerse Pvt. Ltd.",
+    location: "Hyderabad, India",
+    timePeriod: "2 Months",
+    description:
+      "Join us as a Mobile Development Intern and gain practical experience in building intuitive and high-performance mobile applications. Work with technologies like React Native or Flutter, collaborate with experienced developers, and contribute to projects that reach users on Android and iOS platforms."
+  },
+   {
+    id: 2,
+    category: "gamedevelopment",
+    name: "Mobile Development Intern",
+    image: "mobile.jpg",
+    company: "AppVerse Pvt. Ltd.",
+    location: "Hyderabad, India",
+    timePeriod: "2 Months",
+    description:
+      "Join us as a Mobile Development Intern and gain practical experience in building intuitive and high-performance mobile applications. Work with technologies like React Native or Flutter, collaborate with experienced developers, and contribute to projects that reach users on Android and iOS platforms."
+  },
 ];
 
 export default myData;

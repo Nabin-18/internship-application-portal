@@ -45,10 +45,12 @@ const Signup = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Form submitted:", values);
-  };
+ const onSubmit = (values: z.infer<typeof formSchema>) => {
+  console.log("Form submitted:", values);
+  // auto-close after 3s
+};
 
+  
   return (
     <div className="max-w-md mx-auto h-fit p-6 border rounded-lg shadow-md justify-center items-center ">
       {/* <button className="text-white  bg-red-600 h-6 w-6 font-semibold cursor-pointer rounded-full text-center">X</button> */}

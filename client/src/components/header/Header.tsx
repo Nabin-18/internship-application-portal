@@ -4,6 +4,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Search from "./Search";
+
 
 const Header = () => {
   const [showItems, setShowItems] = useState(false);
@@ -22,11 +24,7 @@ const Header = () => {
           </Link>
         </div>
         <div>
-          <Input
-            type="text"
-            placeholder="Search here..."
-            className="w-96 h-10 rounded-2xl border border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none px-4 text-sm placeholder-gray-400 shadow-sm transition-all"
-          />
+         <Search />
         </div>
         <div>
           <Link to="/auth/signup">
