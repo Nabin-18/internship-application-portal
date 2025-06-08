@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Button } from "./ui/button";
+
 interface CardProps {
   name: string;
   image?: string;
@@ -7,14 +10,34 @@ interface CardProps {
   description: string;
 }
 
-const Card: React.FC<CardProps> = ({ name, image, company, location, timePeriod, description }) => {
+const Card: React.FC<CardProps> = ({
+  name,
+  image,
+  company,
+  location,
+  timePeriod,
+  description,
+}) => {
+  const [expanded, setExpanded] = useState(false);
+  const maxLength = 130;
+
+  const toggleExpand = () => setExpanded(!expanded);
+
+  const displayedText =
+    description.length > maxLength && !expanded
+      ? description.slice(0, maxLength) + "..."
+      : description;
+
   return (
-    <div className="flex flex-col w-[300px] h-fit bg-white shadow-lg rounded-2xl p-4 items-center gap-4 transition-transform hover:scale-105">
-      
+    <div className="flex flex-col cursor-pointer w-[300px] h-fit bg-white shadow-lg rounded-2xl p-4 items-center gap-4 transition-transform hover:scale-105 ">
       {/* Image */}
       <div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
         {image ? (
-          <img src={image} alt={name} className="w-full h-full object-cover rounded-lg" />
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover rounded-lg"
+          />
         ) : (
           <span className="text-gray-400">Image</span>
         )}
@@ -22,16 +45,30 @@ const Card: React.FC<CardProps> = ({ name, image, company, location, timePeriod,
 
       {/* Title & Company Info */}
       <div className="flex flex-col items-center gap-1">
-        <h2 className="text-xl font-semibold text-gray-800 text-center">{name}</h2>
+        <h2 className="text-xl font-semibold text-gray-800 text-center">
+          {name}
+        </h2>
         <p className="text-sm text-gray-500 font-medium">{company}</p>
         <p className="text-xs text-gray-400 italic">{location}</p>
-        <span className="text-xs text-white bg-blue-500 px-2 py-0.5 rounded-full">{timePeriod}</span>
+        <span className="text-xs text-white bg-blue-500 px-2 py-0.5 rounded-full">
+          {timePeriod}
+        </span>
       </div>
 
-      {/* Description */}
-      <div className="text-sm text-gray-600 text-center ">
-        {description}
+      {/* Description with See More / See Less */}
+      <div className="text-sm text-gray-600 text-left w-full">
+        <p>{displayedText}</p>
+        {description.length > maxLength && (
+          <button
+            onClick={toggleExpand}
+            className="text-blue-600 underline text-xs mt-1"
+          >
+            {expanded ? "See less" : "See more"}
+          </button>
+        )}
       </div>
+
+      <Button className="cursor-pointer ">View Details</Button>
     </div>
   );
 };
