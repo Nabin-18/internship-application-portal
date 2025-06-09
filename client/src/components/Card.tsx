@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
+import slugify from "slugify";
 
 interface CardProps {
   name: string;
@@ -21,6 +23,8 @@ const Card: React.FC<CardProps> = ({
   const [expanded, setExpanded] = useState(false);
   const maxLength = 130;
 
+  const navigate = useNavigate();
+
   const toggleExpand = () => setExpanded(!expanded);
 
   const displayedText =
@@ -28,8 +32,22 @@ const Card: React.FC<CardProps> = ({
       ? description.slice(0, maxLength) + "..."
       : description;
 
+  const viewDetails = () => {
+    const slug = slugify(name, { lower: true });
+    navigate(`/view-details/${slug}`, {
+      state: {
+        name,
+        image,
+        company,
+        location,
+        timePeriod,
+        description,
+      },
+    });
+  };
+
   return (
-    <div className="flex flex-col cursor-pointer w-[300px] h-fit bg-white shadow-lg rounded-2xl p-4 items-center gap-4 transition-transform hover:scale-105 ">
+    <div className="flex flex-col cursor-pointer w-[300px] h-fit bg-white shadow-lg rounded-2xl p-4 items-center gap-4 transition-transform hover:scale-105">
       {/* Image */}
       <div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
         {image ? (
@@ -55,7 +73,7 @@ const Card: React.FC<CardProps> = ({
         </span>
       </div>
 
-      {/* Description with See More / See Less */}
+      {/* Description */}
       <div className="text-sm text-gray-600 text-left w-full">
         <p>{displayedText}</p>
         {description.length > maxLength && (
@@ -68,7 +86,9 @@ const Card: React.FC<CardProps> = ({
         )}
       </div>
 
-      <Button className="cursor-pointer ">View Details</Button>
+      <Button onClick={viewDetails} className="cursor-pointer">
+        View Details
+      </Button>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import DataScience from "./pages/Home/sidebar/DataScience";
 import GameDevelopment from "./pages/Home/sidebar/GameDevelopment";
 import HomeLayout from "./pages/Home/HomeLayout";
 import SearchedData from "./pages/SearchedData";
+import Details from "./pages/Details";
 
 const App = () => {
   return (
@@ -21,13 +22,13 @@ const App = () => {
 
           <Route path="/" element={<HomeLayout />}>
             <Route path="/" element={<Home />} />
-
             <Route path="web-development" element={<Webdevelopment />} />
             <Route path="data-science" element={<DataScience />} />
             <Route path="machine-learning" element={<Machinelearning />} />
             <Route path="mobile-development" element={<MobileDevelopment />} />
             <Route path="game-development" element={<GameDevelopment />} />
             <Route path="search" element={<SearchedData />} />
+            <Route path="view-details/:title" element={<Details />} />
           </Route>
         </Route>
       </Routes>
