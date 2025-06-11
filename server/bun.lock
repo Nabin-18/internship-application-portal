@@ -11,6 +11,7 @@
         "@types/express": "^5.0.3",
         "@types/jsonwebtoken": "^9.0.9",
         "bcrypt": "^6.0.0",
+        "cors": "^2.8.5",
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
         "generate": "^0.14.0",
@@ -384,6 +385,8 @@
     "copy-task": ["copy-task@0.1.0", "", {}, "sha512-Idcf7BdeyJY8kSQodguY8jevkP8CuB22S9Hr5blRqwEyO75yuZEJQbzJ755Q9vZREnCQ5sfOIRxjZWbUq2+K0g=="],
 
     "core-util-is": ["core-util-is@1.0.3", "", {}, "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="],
+
+    "cors": ["cors@2.8.5", "", { "dependencies": { "object-assign": "^4", "vary": "^1" } }, "sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g=="],
 
     "create-error-class": ["create-error-class@3.0.2", "", { "dependencies": { "capture-stack-trace": "^1.0.0" } }, "sha512-gYTKKexFO3kh200H1Nit76sRwRtOY32vQd3jpAQKpLtZqyNsSQNfI4N7o3eP2wUjV35pTWKRYqFUDBvUha/Pkw=="],
 

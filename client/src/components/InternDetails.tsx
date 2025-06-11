@@ -7,6 +7,7 @@ interface InternDetailsProps {
   description: string;
 }
 
+
 const InternDetails: React.FC<InternDetailsProps> = ({
   name,
   image,
@@ -30,11 +31,15 @@ const InternDetails: React.FC<InternDetailsProps> = ({
         <div className="mb-6">
           <img
             src={image}
-            alt={name}
+            // alt={name}
             className="w-full h-64 object-cover rounded-lg"
           />
         </div>
+        
       )}
+      <div>
+        <img src={image} alt="" />
+      </div>
 
       <p className="text-gray-700 leading-relaxed">{description}</p>
     </div>

@@ -60,6 +60,7 @@ const Card: React.FC<CardProps> = ({
           <span className="text-gray-400">Image</span>
         )}
       </div>
+     
 
       {/* Title & Company Info */}
       <div className="flex flex-col items-center gap-1">

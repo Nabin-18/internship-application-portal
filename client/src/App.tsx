@@ -11,10 +11,21 @@ import GameDevelopment from "./pages/Home/sidebar/GameDevelopment";
 import HomeLayout from "./pages/Home/HomeLayout";
 import SearchedData from "./pages/SearchedData";
 import Details from "./pages/Details";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+        toastClassName="custom-toast"
+      />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="auth/signup" element={<Signup />} />
