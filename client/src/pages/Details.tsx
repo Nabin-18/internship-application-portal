@@ -48,9 +48,17 @@ const Details = () => {
       <div className="flex-1">
         <InternDetails {...matchedIntern} />
       </div>
-      <div className="w-full md:w-1/3 p-4 rounded-xl flex flex-col items-center bg-gray-100 shadow-md">
+      <div className="w-full md:w-1/3 p-4 gap-2 rounded-xl flex flex-col items-center bg-gray-100 shadow-md">
         <h2 className="text-xl font-semibold mb-2">Submission Process</h2>
-        <p className="font-semibold">Please submit your resume</p>
+        <p className="font-semibold">Please submit your details for further processing 
+          <span className="text-sm text-red-500"> (false information can leads towards the rejection)</span>
+         </p>
+        <input type="text" placeholder="Enter your full name" className="border border-gray-300 p-2 rounded w-full " />
+         <input type="email" placeholder="Enter your email" className="border border-gray-300 p-2 rounded w-full " />
+          <input type="text" placeholder="Intern title" className="border border-gray-300 p-2 rounded w-full " />
+           <input type="text" placeholder="Enter company name" className="border border-gray-300 p-2 rounded w-full " />
+            
+        
         <input
           className="border border-gray-300 p-2 rounded w-full cursor-pointer"
           accept=".pdf"

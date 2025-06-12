@@ -4,6 +4,9 @@ import { Pencil, LayoutDashboard } from "lucide-react";
 const listItems = [
   { name: "Create Post", url: "create-post", icon: Pencil },
   { name: "Dashboard", url: "dashboard", icon: LayoutDashboard },
+  {
+    name:"Client Data" ,url:"client-data", icon: LayoutDashboard
+  }
 ];
 
 const Sidebar = () => {

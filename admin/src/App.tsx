@@ -3,6 +3,7 @@ import Home from "./components/Home/Home";
 import UploadPost from "./components/pages/UploadPost";
 import Dashboard from "./components/pages/Dashboard";
 import SearchedData from "./components/pages/SearchedData";
+import ClientData from "./components/pages/ClientData";
 
 
 
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="create-post" element={<UploadPost />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="search" element={<SearchedData />} />
+          <Route path="client-data" element={<ClientData />} />
         </Route>
       </Routes>
     </BrowserRouter>
