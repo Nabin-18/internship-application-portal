@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import myData from "@/assets/data";
-import Card from "../components/Card"; // Adjust path as needed
+import Card from "../components/Card"; 
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
