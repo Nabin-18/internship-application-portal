@@ -31,7 +31,7 @@ const Search = () => {
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search here..."
-        className="w-96 h-10  rounded-r-none border-red-300 focus-visible:!ring-0 px-4 text-sm placeholder-gray-400 shadow-sm transition-all "
+        className="w-fit h-10  rounded-r-none border-red-300 focus-visible:!ring-0 px-4 text-sm placeholder-gray-400 shadow-sm transition-all lg:w-96 "
       />
       <Button
         className="h-10 outline-none rounded-l-none  cursor-pointer  bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"

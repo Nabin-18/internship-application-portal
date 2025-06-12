@@ -16,7 +16,7 @@ const HomeLayout = () => {
   };
   return (
     <div className="flex ">
-      <div className="w-[20%] flex shadow-2xl justify-center bg-white h-screen">
+      <div className="hidden lg:w-[20%] lg:flex shadow-2xl justify-center bg-white h-screen">
         <div className="w-full ">
           <h1 className="font-semibold mt-5 px-3">Choose your field</h1>
           <div className="flex flex-col gap-5 mt-5 w-full">

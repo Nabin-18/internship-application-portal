@@ -19,7 +19,7 @@ const SearchedData = () => {
       <h2 className="text-xl font-semibold mb-4">
         Search Results for: "{query}"
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <div className="flex flex-wrap items-center justify-center gap-4 w-full h-full p-4">
         {filteredData.length > 0 ? (
           filteredData.map((item, index) => (
             <Card

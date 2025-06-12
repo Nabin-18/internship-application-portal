@@ -1,16 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ Step 1
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Search from "./Search";
+
+const listItems = [
+  { id: 1, name: "Web Development", path: "/web-development" },
+  { id: 2, name: "Data Science", path: "/data-science" },
+  { id: 3, name: "Machine Learning", path: "/machine-learning" },
+  { id: 4, name: "Mobile Development", path: "/mobile-development" },
+  { id: 5, name: "Game Development", path: "/game-development" },
+];
 
 const Header = () => {
   const [showItems, setShowItems] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate(); // ✅ Step 2
 
   const toggleItems = () => setShowItems((prev) => !prev);
+
+  const handleClick = (path:any) => {
+    setShowItems(false); 
+    navigate(path); 
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +36,7 @@ const Header = () => {
 
   return (
     <>
+      {/* Desktop Header */}
       <div
         className={`hidden lg:flex justify-between items-center px-6 py-4 shadow-2xl rounded-2xl fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white ${
           isScrolled ? "py-2 shadow-md bg-white/90 backdrop-blur-md" : "py-4"
@@ -44,29 +58,43 @@ const Header = () => {
 
       {/* Mobile Header */}
       <div
-        className={`lg:hidden flex justify-between items-center px-4 py-4 fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${
+        className={`lg:hidden flex justify-between items-center  px-4 py-4 fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? "py-2 shadow-md bg-white/90 backdrop-blur-md" : "py-4"
         }`}
       >
-        <img src="logo.png" alt="logo" className="h-12 w-12 rounded-full" />
-        <Input placeholder="Search here..." className="w-48 h-8 text-sm" />
+        <Link to={"/"}>
+          <img src="logo.png" alt="logo" className="h-12 w-12 rounded-full" />
+        </Link>
+        <Search />
         {showItems ? (
-          <ImCross onClick={toggleItems} className="text-xl text-red-500" />
+          <ImCross
+            onClick={toggleItems}
+            className="text-xl text-red-500 cursor-pointer"
+          />
         ) : (
-          <GiHamburgerMenu onClick={toggleItems} className="text-2xl text-green-600" />
+          <GiHamburgerMenu
+            onClick={toggleItems}
+            className="text-2xl  cursor-pointer"
+          />
         )}
       </div>
 
       {/* Mobile Dropdown */}
       {showItems && (
-        <div className="lg:hidden fixed top-[70px] left-0 right-0 z-40 bg-white p-4 shadow">
-          <div className="flex gap-2 justify-center">
-            <Link to="/auth/signup">
-              <Button className="w-full bg-green-500">Sign up</Button>
-            </Link>
-            <Link to="/auth/login">
-              <Button className="w-full bg-green-500">Log in</Button>
-            </Link>
+        <div className="lg:hidden fixed top-[70px] left-0 right-0 z-40 p-4 shadow bg-white h-fit">
+          <div className="w-full">
+            <h1 className="font-semibold mt-5 px-3">Choose your field</h1>
+            <ul className="list-disc flex flex-col divide-y mt-5">
+              {listItems.map((item) => (
+                <li
+                  key={item.id}
+                  onClick={() => handleClick(item.path)}
+                  className="w-full text-gray-600 hover:text-black text-sm transition-all cursor-pointer list-none p-3 hover:bg-gray-200"
+                >
+                  {item.name}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}

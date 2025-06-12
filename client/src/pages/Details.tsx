@@ -3,6 +3,7 @@ import slugify from "slugify";
 import myData from "@/assets/data";
 import InternDetails from "@/components/InternDetails";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Details = () => {
   const { title } = useParams();
@@ -33,9 +34,11 @@ const Details = () => {
 
   const handleSubmit = () => {
     if (!selectedFile) {
-      alert("Please upload a resume before submitting.");
+      toast.error("Upload pdf before submitting")
       return;
     }
+    toast.success("Uploaded successfullly")
+   
 
     setShowPreview(true);
   };
