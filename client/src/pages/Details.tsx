@@ -61,6 +61,7 @@ const Details = () => {
         
         <input
           className="border border-gray-300 p-2 rounded w-full cursor-pointer"
+          
           accept=".pdf"
           type="file"
           onChange={handleFileChange}
