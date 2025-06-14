@@ -10,7 +10,7 @@ import DataScience from "./pages/Home/sidebar/DataScience";
 import GameDevelopment from "./pages/Home/sidebar/GameDevelopment";
 import HomeLayout from "./pages/Home/HomeLayout";
 import SearchedData from "./pages/SearchedData";
-import Details from "./pages/Details";
+import Details from "./pages/ClientDetails";
 import { ToastContainer } from "react-toastify";
 
 const App = () => {
