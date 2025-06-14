@@ -5,7 +5,8 @@ import fileUpload from 'express-fileupload';
 import { connectDB } from './config/db';
 import uploadRoute from './routes/uploadRoute';
 import userRoute from './routes/userRoute';
-import postRoute from './routes/postRoute'
+import adminRoute from './routes/adminRoute'
+import clientRoute from './routes/clientRoute'
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,8 @@ connectDB();
 
 app.use('/api/auth', userRoute);
 app.use('/api', uploadRoute);
-app.use('/admin', postRoute)
+app.use('/admin', adminRoute)
+app.use('/client',clientRoute)
 
 
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));

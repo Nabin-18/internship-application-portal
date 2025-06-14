@@ -2,43 +2,42 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 
 type CardProps = {
+  id: number;
   title: string;
-  companyName: string;
+  company: string;
   location: string;
-  timeDuration: string;
+  time: string;
   image: string;
   description: string;
-  index: number;
-  onUpdate: (index: number, updatedData: CardFormData) => void;
-  onDelete: (index: number) => void;
+  onUpdate: (updatedData: CardFormData) => void;
+  onDelete: () => void;
 };
 
 type CardFormData = {
   title: string;
-  companyName: string;
+  company: string;
   location: string;
-  timeDuration: string;
+  time: string;
   image: string;
   description: string;
 };
 
 const Card = ({
   title,
-  companyName,
+  company,
   location,
-  timeDuration,
+  time,
   image,
   description,
-  index,
   onUpdate,
   onDelete,
 }: CardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<CardFormData>({
     title,
-    companyName,
+    company,
     location,
-    timeDuration,
+    time,
     image,
     description,
   });
@@ -55,7 +54,7 @@ const Card = ({
 
   const handleEditClick = () => {
     if (isEditing) {
-      onUpdate(index, formData);
+      onUpdate(formData);
     }
     setIsEditing(!isEditing);
   };
@@ -73,11 +72,11 @@ const Card = ({
           />
           <input
             type="text"
-            name="companyName"
-            value={formData.companyName}
+            name="company"
+            value={formData.company}
             onChange={handleChange}
             className="border p-2 rounded"
-            placeholder="Company Name"
+            placeholder="Company"
           />
           <input
             type="text"
@@ -89,11 +88,19 @@ const Card = ({
           />
           <input
             type="text"
-            name="timeDuration"
-            value={formData.timeDuration}
+            name="time"
+            value={formData.time}
             onChange={handleChange}
             className="border p-2 rounded"
             placeholder="Time Duration"
+          />
+          <input
+            type="text"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            placeholder="Image URL"
           />
           <textarea
             name="description"
@@ -113,9 +120,9 @@ const Card = ({
             className="w-full h-60 object-cover rounded"
           />
           <div className="flex justify-between text-sm text-gray-600">
-            <p><strong>Company:</strong> {companyName}</p>
+            <p><strong>Company:</strong> {company}</p>
             <p><strong>Location:</strong> {location}</p>
-            <p><strong>Duration:</strong> {timeDuration}</p>
+            <p><strong>Duration:</strong> {time}</p>
           </div>
           <p className="text-sm text-gray-800">{description}</p>
         </>
@@ -130,7 +137,7 @@ const Card = ({
         </Button>
         <Button
           className="bg-red-500 hover:bg-red-600 cursor-pointer"
-          onClick={() => onDelete(index)}
+          onClick={onDelete}
         >
           Delete
         </Button>

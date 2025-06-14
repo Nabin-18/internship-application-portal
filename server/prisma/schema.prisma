@@ -14,12 +14,13 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   String                 @id @default(cuid())
+  email                String                 @unique
+  name                 String
+  password             String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  InternshipSubmission InternshipSubmission[]
 }
 
 //for admin
@@ -34,4 +35,22 @@ model Post {
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+//for internship submission by client 
+
+model InternshipSubmission {
+  id Int @id @default(autoincrement())
+
+  name        String
+  email       String
+  internTitle String
+  company     String
+  location    String
+  resumeUrl   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
