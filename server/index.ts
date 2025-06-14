@@ -19,7 +19,7 @@ connectDB();
 
 app.use('/api/auth', userRoute);
 app.use('/api', uploadRoute);
-app.use('/admin',postRoute)
+app.use('/admin', postRoute)
 
 
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));
