@@ -17,6 +17,7 @@ type ClientDataType = {
   email: string;
   internTitle: string;
   location: string;
+  company: string;
   resume: string;
   status: ClientStatus;
 };
@@ -28,8 +29,9 @@ const initialClientData: ClientDataType[] = [
     email: "khanalnabin310@gmail.com",
     internTitle: "React Js",
     location: "Bangalore, India",
+    company: "Tech Solutions",
     resume: "link",
-    status: null, 
+    status: null,
   },
   {
     id: "2",
@@ -37,15 +39,20 @@ const initialClientData: ClientDataType[] = [
     email: "example@gmail.com",
     internTitle: "React Js",
     location: "Bangalore, India",
+    company: "Khanal Dai",
     resume: "link",
     status: null,
   },
 ];
 
 const ClientData = () => {
-  const [clientData, setClientData] = useState<ClientDataType[]>(initialClientData);
+  const [clientData, setClientData] =
+    useState<ClientDataType[]>(initialClientData);
 
-  const handleStatusChange = (id: string, newStatus: "accepted" | "rejected") => {
+  const handleStatusChange = (
+    id: string,
+    newStatus: "accepted" | "rejected"
+  ) => {
     setClientData((prev) =>
       prev.map((data) =>
         data.id === id ? { ...data, status: newStatus } : data
@@ -60,16 +67,28 @@ const ClientData = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            {["S.N", "Username", "Email", "Intern Title", "Location", "Resume", "Actions", "Status"].map(
-              (heading, i) => (
-                <TableHead
-                  key={i}
-                  className={`font-bold ${heading === "Actions" || heading === "Status" ? "text-right" : ""}`}
-                >
-                  {heading}
-                </TableHead>
-              )
-            )}
+            {[
+              "S.N",
+              "Username",
+              "Email",
+              "Intern Title",
+              "Location",
+              "Company",
+              "Resume",
+              "Actions",
+              "Status",
+            ].map((heading, i) => (
+              <TableHead
+                key={i}
+                className={`font-bold ${
+                  heading === "Actions" || heading === "Status"
+                    ? "text-right"
+                    : ""
+                }`}
+              >
+                {heading}
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
 
@@ -81,6 +100,7 @@ const ClientData = () => {
               <TableCell>{data.email}</TableCell>
               <TableCell>{data.internTitle}</TableCell>
               <TableCell>{data.location}</TableCell>
+              <TableCell>{data.company}</TableCell>
               <TableCell>
                 <a
                   href={data.resume}
@@ -109,10 +129,14 @@ const ClientData = () => {
               </TableCell>
               <TableCell className="text-right">
                 {data.status === "accepted" && (
-                  <span className="text-green-600 font-semibold cursor-pointer">Accepted</span>
+                  <span className="text-green-600 font-semibold cursor-pointer">
+                    Accepted
+                  </span>
                 )}
                 {data.status === "rejected" && (
-                  <span className="text-red-600 font-semibold cursor-pointer">Rejected</span>
+                  <span className="text-red-600 font-semibold cursor-pointer">
+                    Rejected
+                  </span>
                 )}
               </TableCell>
             </TableRow>
