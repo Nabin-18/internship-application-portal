@@ -12,6 +12,7 @@ import HomeLayout from "./pages/Home/HomeLayout";
 import SearchedData from "./pages/SearchedData";
 import Details from "./pages/ClientDetails";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -39,7 +40,15 @@ const App = () => {
             <Route path="mobile-development" element={<MobileDevelopment />} />
             <Route path="game-development" element={<GameDevelopment />} />
             <Route path="search" element={<SearchedData />} />
-            <Route path="view-details/:title" element={<Details />} />
+            // Protected routes for client details
+            <Route
+              path="view-details/:title"
+              element={
+                <ProtectedRoute>
+                  <Details />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Route>
       </Routes>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
 
 import {
   Form,
@@ -17,10 +18,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -31,6 +34,8 @@ const formSchema = z.object({
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -44,8 +49,26 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("Form submitted:", values);
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:8000/api/auth/login", values);
+      const token = res.data.token;
+      const user = res.data.user;
+      //save the token and user to the store
+      useAuthStore.getState().login(token, user);
+
+      toast.success("Login successful!");
+      console.log("Login response:", res.data);
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+   
   };
 
   return (
@@ -101,11 +124,12 @@ const Login = () => {
           />
 
           {/* Submit button */}
-          <Button type="submit" className="w-full cursor-pointer">
-            Login
+          <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </form>
       </Form>
+
       <p className="mt-4 text-sm text-gray-600">
         Don't have an account?{" "}
         <a href="/auth/signup" className="text-blue-600 hover:underline">
