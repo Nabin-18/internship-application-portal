@@ -17,6 +17,7 @@
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^1.4.13",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
     "cors": "^2.8.5",
@@ -25,7 +26,9 @@
     "express-fileupload": "^1.5.1",
     "generate": "^0.14.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1",
     "nodemon": "^3.1.10",
+    "path": "^0.12.7",
     "prisma": "^6.9.0"
   }
 }

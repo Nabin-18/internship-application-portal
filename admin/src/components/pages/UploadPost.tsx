@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 
+// Zod schema for validation including file check
 const postSchema = z.object({
   title: z.string().min(1, "Title is required"),
   category: z.string().min(1, "Category is required"),
@@ -10,8 +12,8 @@ const postSchema = z.object({
   location: z.string().min(1, "Location is required"),
   time: z.string().min(1, "Time duration is required"),
   image: z
-    .custom<FileList>()
-    .refine((files) => files && files.length > 0, "Image is required"),
+    .any()
+    .refine((files) => files && files.length === 1, "Image file is required"),
   description: z.string().min(1, "Description is required"),
 });
 
@@ -19,56 +21,78 @@ type PostFormData = z.infer<typeof postSchema>;
 
 const UploadPost = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
+    reset,
     formState: { errors },
-  } = useForm<PostFormData>({ resolver: zodResolver(postSchema) });
+  } = useForm<PostFormData>({
+    resolver: zodResolver(postSchema),
+  });
 
   const imageFileList = watch("image");
 
-  if (imageFileList && imageFileList.length > 0 && !imagePreview) {
-    const file = imageFileList[0];
-    setImagePreview(URL.createObjectURL(file));
-  }
+  // Update preview when image changes
+  useEffect(() => {
+    if (imageFileList && imageFileList.length > 0) {
+      const file = imageFileList[0];
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
 
-  const onSubmit = async ( data:PostFormData) => {
-    
-    console.log("Form Data", data);
-    // formData.append("title", data.title);
-    // formData.append("category", data.category);
-    // formData.append("company", data.company);
-    // formData.append("location", data.location);
-    // formData.append("time", data.time);
-    // formData.append("description", data.description);
-    // formData.append("image", data.image[0]);
+      return () => URL.revokeObjectURL(previewUrl); // Cleanup
+    } else {
+      setImagePreview(null);
+    }
+  }, [imageFileList]);
 
-    // console.log("FormData",formData)
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setValue("image", files);
+    }
+  };
 
-    // try {
-    //   const res = await fetch("http://localhost:8000/api/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
+  const onSubmit = async (data: PostFormData) => {
+    const file = data.image[0];
+    const formData = new FormData();
 
-    //   const response = await res.json();
+    formData.append("title", data.title);
+    formData.append("category", data.category);
+    formData.append("company", data.company);
+    formData.append("location", data.location);
+    formData.append("time", data.time);
+    formData.append("description", data.description);
+    formData.append("image", file);
 
-    //   if (!res.ok) throw new Error(response.message || "Upload failed");
+    try {
+      const res = await fetch("http://localhost:8000/admin/create-post", {
+        method: "POST",
+        body: formData,
+      });
 
-    //   console.log(response);
-    //   alert("Post uploaded successfully!");
-    //   setImagePreview(null);
-    // } catch (error) {
-    //   console.error(error);
-    //   alert("Error submitting post");
-    // }
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Upload failed");
+      }
+
+      toast.success("Post submitted successfully!");
+      reset();
+      setImagePreview(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error submitting post");
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto mt-10 bg-white shadow-md p-6 rounded-lg">
       <h1 className="text-2xl font-bold mb-6 text-center">Create a Post</h1>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Title */}
         <div>
           <label className="block mb-1 font-medium">Intern Title</label>
           <input
@@ -82,11 +106,12 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Category */}
         <div>
           <label className="block mb-1 font-medium">Category</label>
           <select
             {...register("category")}
-            className="w-full border rounded-md p-2 cursor-pointer"
+            className="w-full border rounded-md p-2"
           >
             <option value="">Select Category</option>
             <option value="webdevelopment">Web Development</option>
@@ -100,6 +125,7 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Company */}
         <div>
           <label className="block mb-1 font-medium">Company Name</label>
           <input
@@ -113,6 +139,7 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Location */}
         <div>
           <label className="block mb-1 font-medium">Location</label>
           <input
@@ -126,6 +153,7 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Time Duration */}
         <div>
           <label className="block mb-1 font-medium">Time Duration</label>
           <input
@@ -139,12 +167,15 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Image Upload */}
         <div>
-          <label className="block mb-1 font-medium">Upload Image</label>
+          <label className="block mb-1 font-medium">
+            Upload Image <span className="text-red-500">*</span>
+          </label>
           <input
             type="file"
             accept="image/*"
-            {...register("image")}
+            onChange={onFileChange}
             className="w-full border rounded-md p-2"
           />
           {errors.image && (
@@ -152,6 +183,7 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Preview */}
         {imagePreview && (
           <div className="mt-4">
             <p className="text-sm font-medium mb-2">Image Preview:</p>
@@ -163,6 +195,7 @@ const UploadPost = () => {
           </div>
         )}
 
+        {/* Description */}
         <div>
           <label className="block mb-1 font-medium">Description</label>
           <textarea
@@ -176,6 +209,7 @@ const UploadPost = () => {
           )}
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all"

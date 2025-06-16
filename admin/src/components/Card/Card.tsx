@@ -1,5 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+
+type CardFormData = {
+  title: string;
+  company: string;
+  location: string;
+  time: string;
+  image: string | File;
+  description: string;
+};
 
 type CardProps = {
   id: number;
@@ -11,15 +20,6 @@ type CardProps = {
   description: string;
   onUpdate: (updatedData: CardFormData) => void;
   onDelete: () => void;
-};
-
-type CardFormData = {
-  title: string;
-  company: string;
-  location: string;
-  time: string;
-  image: string;
-  description: string;
 };
 
 const Card = ({
@@ -42,6 +42,13 @@ const Card = ({
     description,
   });
 
+  useEffect(() => {
+    if (formData.image instanceof File) {
+      const preview = URL.createObjectURL(formData.image);
+      return () => URL.revokeObjectURL(preview);
+    }
+  }, [formData.image]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -50,6 +57,16 @@ const Card = ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+    }
   };
 
   const handleEditClick = () => {
@@ -94,14 +111,25 @@ const Card = ({
             className="border p-2 rounded"
             placeholder="Time Duration"
           />
+
           <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
             className="border p-2 rounded"
-            placeholder="Image URL"
           />
+          {formData.image && (
+            <img
+              src={
+                formData.image instanceof File
+                  ? URL.createObjectURL(formData.image)
+                  : `http://localhost:8000${formData.image}`
+              }
+              alt="Preview"
+              className="w-full h-60 object-cover rounded mt-2"
+            />
+          )}
+
           <textarea
             name="description"
             value={formData.description}
@@ -115,14 +143,20 @@ const Card = ({
         <>
           <h1 className="text-xl font-bold text-center">{title}</h1>
           <img
-            src={image}
+            src={`http://localhost:8000${image}`}
             alt={title}
             className="w-full h-60 object-cover rounded"
           />
           <div className="flex justify-between text-sm text-gray-600">
-            <p><strong>Company:</strong> {company}</p>
-            <p><strong>Location:</strong> {location}</p>
-            <p><strong>Duration:</strong> {time}</p>
+            <p>
+              <strong>Company:</strong> {company}
+            </p>
+            <p>
+              <strong>Location:</strong> {location}
+            </p>
+            <p>
+              <strong>Duration:</strong> {time}
+            </p>
           </div>
           <p className="text-sm text-gray-800">{description}</p>
         </>

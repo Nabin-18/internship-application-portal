@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../Card/Card";
 
-// Post structure from backend
 interface Post {
   id: number;
   title: string;
@@ -12,6 +11,15 @@ interface Post {
   description: string;
 }
 
+export type CardFormData = {
+  title: string;
+  company: string;
+  location: string;
+  time: string;
+  image: string | File;
+  description: string;
+};
+
 const Dashboard = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -19,24 +27,15 @@ const Dashboard = () => {
     getAllData();
   }, []);
 
-const getAllData = async () => {
-  try {
-    const res = await fetch("http://localhost:8000/admin/get-post", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const result = await res.json();
-    console.log("Fetched posts:", result.data); 
-
-    setPosts(result.data); 
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
+  const getAllData = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/admin/get-post");
+      const result = await res.json();
+      setPosts(result.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleDelete = async (id: number) => {
     try {
@@ -45,7 +44,7 @@ const getAllData = async () => {
       });
 
       if (res.ok) {
-        setPosts(prev => prev.filter(post => post.id !== id));
+        setPosts((prev) => prev.filter((post) => post.id !== id));
       } else {
         console.error("Failed to delete post");
       }
@@ -54,20 +53,30 @@ const getAllData = async () => {
     }
   };
 
-  const handleUpdate = async (id: number, updatedData: Omit<Post, "id">) => {
+  const handleUpdate = async (id: number, updatedData: CardFormData) => {
     try {
+      const formData = new FormData();
+      formData.append("title", updatedData.title);
+      formData.append("company", updatedData.company);
+      formData.append("location", updatedData.location);
+      formData.append("time", updatedData.time);
+      formData.append("description", updatedData.description);
+
+      if (updatedData.image instanceof File) {
+        formData.append("image", updatedData.image);
+      } else {
+        formData.append("existingImagePath", updatedData.image); // optional
+      }
+
       const res = await fetch(`http://localhost:8000/admin/update-post/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
+        body: formData,
       });
 
       if (res.ok) {
         const updatedPost = await res.json();
-        setPosts(prev =>
-          prev.map(post => (post.id === id ? updatedPost : post))
+        setPosts((prev) =>
+          prev.map((post) => (post.id === id ? updatedPost : post))
         );
       } else {
         console.error("Failed to update post");

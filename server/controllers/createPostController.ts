@@ -2,32 +2,48 @@
 import prisma from "../config/db";
 import type { Request, Response } from "express";
 
+
 //admin can create multiple post  (Create Operation)
 
-export const createPostController = async (req: Request, res: Response): Promise<void> => {
-  const { title, category, company, location, time, image, description } = req.body
-
+export const createPostController = async (req: Request, res: Response):Promise<void> => {
   try {
-    const createPost = await prisma.post.create({
+    const { title, category, company, location, time, description } = req.body;
+    const files = req.files as {
+      image?: Express.Multer.File[];
+      pdf?: Express.Multer.File[];
+    };
+
+    const imageFile = files?.image?.[0];
+   
+
+    if (!imageFile) {
+       res.status(400).json({ message: "Image file is required" });
+       return
+    }
+
+    const newPost = await prisma.post.create({
       data: {
-        title, category, company, location, time, image, description
-      }
+        title,
+        category,
+        company,
+        location,
+        time,
+        description,
+        image: `/uploads/${imageFile.filename}`,
+        
+      },
+    });
 
-    })
-    res.status(200).json({
-      message: "Post Created Successfully !",
-      data: createPost
-    })
-
+    res.status(201).json({ message: "Post created", post: newPost });
   } catch (error) {
-    console.log("Error occur", error)
-    res.status(500).json({
-      message: "Internal Server Error"
-    })
-
+    console.error("Error creating post:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
+};
 
-}
+
+
+
 //delete the post from the database  (delete Operation)
 
 export const deletePost = async (req: Request, res: Response): Promise<void> => {

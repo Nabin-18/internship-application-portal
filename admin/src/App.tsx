@@ -5,13 +5,12 @@ import Dashboard from "./components/pages/Dashboard";
 import SearchedData from "./components/pages/SearchedData";
 import ClientData from "./components/pages/ClientData";
 
-
-
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}>
+          <Route index element={<Dashboard />} />
           <Route path="create-post" element={<UploadPost />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="search" element={<SearchedData />} />
