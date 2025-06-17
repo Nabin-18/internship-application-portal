@@ -5,23 +5,36 @@ import type { Request, Response } from "express";
 
 //submit the client data from frontend
 export const submitInternDetail = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, internTitle, company, location, resumeUrl } = req.body
+  const { name, email, internTitle, company, location } = req.body;
+
+  // PDF file is available in req.file
+  const file = req.file;
+
+  if (!file) {
+    res.status(400).json({ message: "PDF resume file is required." });
+    return;
+  }
+
+  const resumeUrl = `http://localhost:8000/uploads/${file.filename}`; 
 
   try {
     const data = await prisma.internshipSubmission.create({
       data: {
-        name, email, internTitle, company, location, resumeUrl
-      }
-    })
-    res.status(200).json({ message: "Details submitted Successfully", data: data })
+        name,
+        email,
+        internTitle,
+        company,
+        location,
+        resumeUrl,
+      },
+    });
 
+    res.status(200).json({ message: "Details submitted successfully", data });
   } catch (error) {
-    console.log("Error occured while submitting", error)
+    console.error("Error occurred while submitting:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-  res.status(500).json({ message: "Internal Sever Error" })
-
-
-}
+};
 
 //get all the client Data by admin
 

@@ -1,20 +1,21 @@
 import { useParams } from "react-router-dom";
 import slugify from "slugify";
-import myData from "@/assets/data";
+
 import InternDetails from "@/components/InternDetails";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostStore } from "@/store/postStore";
 
 // Zod schema
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
-  internTitle: z.string().min(1, "Intern title is required"),
-  company: z.string().min(1, "Company name is required"),
-  location: z.string().min(1, "Location is required"),
+  internTitle: z.string().min(1),
+  company: z.string().min(1),
+  location: z.string().min(1),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -24,24 +25,41 @@ const Details = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileURL, setFileURL] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+
+  const { posts } = usePostStore();
+  const matchedIntern = posts.find(
+    (intern) => slugify(intern.title, { lower: true }) === title
+  );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      internTitle: matchedIntern?.title || "",
+      company: matchedIntern?.company || "",
+      location: matchedIntern?.location || "",
+    },
   });
 
-  const matchedIntern = myData.find(
-    (intern) => slugify(intern.name, { lower: true }) === title
-  );
+  useEffect(() => {
+    if (matchedIntern) {
+      setValue("internTitle", matchedIntern.title);
+      setValue("company", matchedIntern.company);
+      setValue("location", matchedIntern.location);
+    }
+  }, [matchedIntern, setValue]);
 
-  if (!matchedIntern) {
-    return (
-      <p className="text-red-500 text-center p-6">Internship not found.</p>
-    );
-  }
+  useEffect(() => {
+    if (showPreview && previewRef.current) {
+      previewRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showPreview]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,8 +73,6 @@ const Details = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
-
     if (!selectedFile) {
       toast.error("Please upload a PDF resume before submitting.");
       return;
@@ -71,21 +87,32 @@ const Details = () => {
     formData.append("resume", selectedFile);
 
     try {
+      setLoading(true);
       const res = await fetch("http://localhost:8000/client/submit-data", {
         method: "POST",
         body: formData,
       });
 
-      const response = await res.json();
-      if (!res.ok) throw new Error(response.message || "Upload failed");
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Upload failed");
+      }
 
       toast.success("Form submitted successfully!");
       setShowPreview(true);
-    } catch (error) {
-      console.log("Error occurred", error);
-      toast.error("Something went wrong while submitting the form.");
+    } catch (error: any) {
+      console.error("Error occurred:", error);
+      toast.error(error.message || "Something went wrong while submitting.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (!matchedIntern) {
+    return (
+      <p className="text-red-500 text-center p-6">Internship not found.</p>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row gap-4 p-6">
@@ -105,6 +132,7 @@ const Details = () => {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
+          encType="multipart/form-data"
           className="flex flex-col gap-3 w-full"
         >
           <div>
@@ -134,39 +162,28 @@ const Details = () => {
           <div>
             <input
               type="text"
-              placeholder="Intern title"
-              className="border border-gray-300 p-2 rounded w-full"
+              readOnly
+              className="bg-gray-200 cursor-not-allowed border border-gray-300 p-2 rounded w-full"
               {...register("internTitle")}
             />
-            {errors.internTitle && (
-              <p className="text-red-500 text-sm">
-                {errors.internTitle.message}
-              </p>
-            )}
           </div>
 
           <div>
             <input
               type="text"
-              placeholder="Enter company name"
-              className="border border-gray-300 p-2 rounded w-full"
+              readOnly
+              className="bg-gray-200 cursor-not-allowed border border-gray-300 p-2 rounded w-full"
               {...register("company")}
             />
-            {errors.company && (
-              <p className="text-red-500 text-sm">{errors.company.message}</p>
-            )}
           </div>
 
           <div>
             <input
               type="text"
-              placeholder="Enter company location"
-              className="border border-gray-300 p-2 rounded w-full"
+              readOnly
+              className="bg-gray-200 cursor-not-allowed border border-gray-300 p-2 rounded w-full"
               {...register("location")}
             />
-            {errors.location && (
-              <p className="text-red-500 text-sm">{errors.location.message}</p>
-            )}
           </div>
 
           <input
@@ -178,14 +195,15 @@ const Details = () => {
 
           <button
             type="submit"
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            disabled={loading}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
 
         {showPreview && fileURL && (
-          <div className="mt-6 w-full">
+          <div ref={previewRef} className="mt-6 w-full">
             <h3 className="text-lg font-semibold mb-2">Preview:</h3>
             <iframe
               src={fileURL}

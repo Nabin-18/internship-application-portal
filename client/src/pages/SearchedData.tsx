@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import myData from "@/assets/data";
-import Card from "../components/Card"; 
+import { usePostStore } from "@/store/postStore"; // adjust the import path as needed
+import Card from "../components/Card";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -10,8 +10,13 @@ const SearchedData = () => {
   const query = useQuery().get("query") || "";
   const search = query.toLowerCase();
 
-  const filteredData = myData.filter((item) =>
-    item.name.toLowerCase().includes(search)
+  const { posts } = usePostStore(); // ✅ get all posts from store
+
+  const filteredData = posts.filter((item) =>
+    item.title.toLowerCase().includes(search) || 
+    item.description.toLowerCase().includes(search) || 
+    item.company.toLowerCase().includes(search) || 
+    item.location.toLowerCase().includes(search)
   );
 
   return (
@@ -21,13 +26,13 @@ const SearchedData = () => {
       </h2>
       <div className="flex flex-wrap items-center justify-center gap-4 w-full h-full p-4">
         {filteredData.length > 0 ? (
-          filteredData.map((item, index) => (
+          filteredData.map((item) => (
             <Card
-              key={index}
-              name={item.name}
+              key={item.id}
+              name={item.title}
               image={item.image}
               description={item.description}
-              timePeriod={item.timePeriod}
+              timePeriod={item.time}
               company={item.company}
               location={item.location}
             />

@@ -1,7 +1,18 @@
 import Card from "@/components/Card";
-import myData from "@/assets/data";
+import { usePostStore } from "@/store/postStore";
+import { useEffect } from "react";
+
+
 
 const Home = () => {
+const { posts, fetchPosts } = usePostStore();
+
+ useEffect(() => {
+  fetchPosts();
+}, [fetchPosts]);
+
+
+
   return (
     <div className="flex w-full  bg-gray-100">
       <div className="w-[100%] flex flex-col justify-center ">
@@ -11,18 +22,18 @@ const Home = () => {
           </h1>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-          {myData.map((item) => (
+          {posts.map((item) => (
             <div
               className="h-full w-full flex items-center justify-center"
               key={item.id}
             >
               <Card
                 key={item.id}
-                name={item.name}
+                name={item.title}
                 image={item.image}
                 company={item.company}
                 location={item.location}
-                timePeriod={item.timePeriod}
+                timePeriod={item.time}
                 description={item.description}
               />
             </div>

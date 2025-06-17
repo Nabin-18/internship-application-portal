@@ -45,6 +45,7 @@ const Card: React.FC<CardProps> = ({
       },
     });
   };
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
   return (
     <div className="flex flex-col cursor-pointer w-[300px] h-fit bg-white shadow-lg rounded-2xl p-4 items-center gap-4 transition-transform hover:scale-105">
@@ -52,7 +53,7 @@ const Card: React.FC<CardProps> = ({
       <div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
         {image ? (
           <img
-            src={image}
+            src={`${BASE_URL}${image}`}
             alt={name}
             className="w-full h-full object-cover rounded-lg"
           />
@@ -60,7 +61,6 @@ const Card: React.FC<CardProps> = ({
           <span className="text-gray-400">Image</span>
         )}
       </div>
-     
 
       {/* Title & Company Info */}
       <div className="flex flex-col items-center gap-1">
