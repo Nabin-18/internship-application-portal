@@ -48,6 +48,7 @@ const Card = ({
       return () => URL.revokeObjectURL(preview);
     }
   }, [formData.image]);
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -123,7 +124,7 @@ const Card = ({
               src={
                 formData.image instanceof File
                   ? URL.createObjectURL(formData.image)
-                  : `http://localhost:8000${formData.image}`
+                  : `${BASE_URL}${formData.image}`
               }
               alt="Preview"
               className="w-full h-60 object-cover rounded mt-2"
@@ -143,7 +144,7 @@ const Card = ({
         <>
           <h1 className="text-xl font-bold text-center">{title}</h1>
           <img
-            src={`http://localhost:8000${image}`}
+            src={`${BASE_URL}${image}`}
             alt={title}
             className="w-full h-60 object-cover rounded"
           />

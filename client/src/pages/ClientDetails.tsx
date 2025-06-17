@@ -54,16 +54,37 @@ const Details = () => {
     }
   };
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
+
     if (!selectedFile) {
       toast.error("Please upload a PDF resume before submitting.");
       return;
     }
 
-    //write logic to handle form submission, e.g., sending data to the server
-    toast.success("Form submitted successfully!");
-    setShowPreview(true);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("internTitle", data.internTitle);
+    formData.append("company", data.company);
+    formData.append("location", data.location);
+    formData.append("resume", selectedFile);
+
+    try {
+      const res = await fetch("http://localhost:8000/client/submit-data", {
+        method: "POST",
+        body: formData,
+      });
+
+      const response = await res.json();
+      if (!res.ok) throw new Error(response.message || "Upload failed");
+
+      toast.success("Form submitted successfully!");
+      setShowPreview(true);
+    } catch (error) {
+      console.log("Error occurred", error);
+      toast.error("Something went wrong while submitting the form.");
+    }
   };
 
   return (
@@ -118,7 +139,9 @@ const Details = () => {
               {...register("internTitle")}
             />
             {errors.internTitle && (
-              <p className="text-red-500 text-sm">{errors.internTitle.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.internTitle.message}
+              </p>
             )}
           </div>
 

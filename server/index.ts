@@ -21,7 +21,10 @@ app.use(cors());
 
 // multer
 
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+console.log("STATIC PATH:", path.join(__dirname, "uploads"));
+
+
 
  
 // Connect to DB

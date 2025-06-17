@@ -108,21 +108,41 @@ export const getAllPosts = async (req: Request, res: Response): Promise<void> =>
 //update the post (Update Operation)
 
 export const updatePost = async (req: Request, res: Response): Promise<void> => {
-  const postId = Number(req.params.id)
-  const { title, category, company, location, time, image, description } = req.body
-  try {
-    const updatedPost = await prisma.post.update({
-      where: { id: postId },
-      data: {
-        title, category, company, location, time, image, description
-      }
-    })
-    res.status(200).json({ message: "Post updated Successfully", data: updatedPost })
-
-  } catch (error) {
-    console.log("Error while updating", error)
-    res.status(500).json({ message: "Internal Server Error" })
-
+  const postId = Number(req.params.id);
+  if (isNaN(postId)) {
+    res.status(400).json({ message: "Invalid post ID" });
+    return;
   }
 
-}
+  try {
+    const { title, category, company, location, time, description, existingImagePath } = req.body;
+
+    const files = req.files as {
+      image?: Express.Multer.File[];
+    };
+
+    const imageFile = files?.image?.[0];
+
+    const dataToUpdate: any = {
+      title,
+      category,
+      company,
+      location,
+      time,
+      description,
+      image: imageFile
+        ? `/uploads/${imageFile.filename}`
+        : existingImagePath || undefined,
+    };
+
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: dataToUpdate,
+    });
+
+    res.status(200).json({ message: "Post updated successfully", data: updatedPost });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -11,7 +11,11 @@ router.post('/create-post', upload.fields([
 ]), createPostController)
 router.delete('/delete-post/:id', deletePost)
 router.get('/get-post', getAllPosts)
-router.put('/update-post/:id', updatePost)
+router.put(
+  "/update-post/:id",
+  upload.fields([{ name: "image", maxCount: 1 }]),
+  updatePost
+);
 router.get('/client-data', getClientData)
 
 

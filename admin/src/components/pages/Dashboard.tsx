@@ -32,6 +32,7 @@ const Dashboard = () => {
       const res = await fetch("http://localhost:8000/admin/get-post");
       const result = await res.json();
       setPosts(result.data);
+      console.log("Fetched posts:", result.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -54,37 +55,41 @@ const Dashboard = () => {
   };
 
   const handleUpdate = async (id: number, updatedData: CardFormData) => {
-    try {
-      const formData = new FormData();
-      formData.append("title", updatedData.title);
-      formData.append("company", updatedData.company);
-      formData.append("location", updatedData.location);
-      formData.append("time", updatedData.time);
-      formData.append("description", updatedData.description);
+  try {
+    const formData = new FormData();
+    formData.append("title", updatedData.title);
+    formData.append("company", updatedData.company);
+    formData.append("location", updatedData.location);
+    formData.append("time", updatedData.time);
+    formData.append("description", updatedData.description);
 
-      if (updatedData.image instanceof File) {
-        formData.append("image", updatedData.image);
-      } else {
-        formData.append("existingImagePath", updatedData.image); // optional
-      }
-
-      const res = await fetch(`http://localhost:8000/admin/update-post/${id}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (res.ok) {
-        const updatedPost = await res.json();
-        setPosts((prev) =>
-          prev.map((post) => (post.id === id ? updatedPost : post))
-        );
-      } else {
-        console.error("Failed to update post");
-      }
-    } catch (error) {
-      console.error("Error updating post:", error);
+    if (updatedData.image instanceof File) {
+      formData.append("image", updatedData.image);
+    } else {
+      // Send existing image path to backend (if user didn't change it)
+      formData.append("existingImagePath", updatedData.image);
     }
-  };
+
+    const res = await fetch(`http://localhost:8000/admin/update-post/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    const resJson = await res.json();
+
+    if (res.ok) {
+      const updatedPost = resJson.data;
+      setPosts((prev) =>
+        prev.map((post) => (post.id === id ? updatedPost : post))
+      );
+    } else {
+      console.error("Failed to update post", resJson.message);
+    }
+  } catch (error) {
+    console.error("Error updating post:", error);
+  }
+};
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
